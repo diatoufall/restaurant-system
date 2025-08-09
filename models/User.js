@@ -1,3 +1,4 @@
+// models/User.js
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     username: {
@@ -6,23 +7,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true
-      }
+      allowNull: false
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    role: {
-      type: DataTypes.STRING,
-      defaultValue: 'customer'
     }
   }, {
-    tableName: 'users',
-    timestamps: true
+    tableName: 'users'
   });
 
   return User;

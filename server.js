@@ -1,16 +1,24 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const app = express();
+const { sequelize } = require('./models');
 
-// Middleware ESSENTIEL
 app.use(express.json());
 
-// Import ABSOLU des routes
-const userRoutes = require('./routes/users');
+// Import des routes
+const userRoutes = require(path.join(__dirname, 'backend', 'routes', 'users'));
 app.use('/api/users', userRoutes);
 
-// Route test
-app.get('/', (req, res) => res.send('API Works'));
+// Test route
+app.get('/test', (req, res) => res.send('API Ready'));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Démarrage
+sequelize.sync({ force: true }).then(() => {
+  const PORT = 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log('Test: http://localhost:3000/test');
+    console.log('Register: POST http://localhost:3000/api/users/register');
+  });
+});

@@ -1,26 +1,29 @@
-const { sequelize } = require('../config/database');
-const { DataTypes } = require('sequelize');
+// models/index.js
+const { Sequelize } = require('sequelize');
+const path = require('path');
 
-const User = require('./User')(sequelize, DataTypes);
-const Menu = require('./Menu')(sequelize, DataTypes);
-const Order = require('./Order')(sequelize, DataTypes);
-const Review = require('./Review')(sequelize, DataTypes);
+// Configuration unique de Sequelize
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: path.join(__dirname, '../database.sqlite'),
+  logging: console.log,
+  define: {
+    timestamps: true
+  }
+});
 
-// Relations
-User.hasMany(Menu);
-Menu.belongsTo(User);
+// Import des modèles
+const User = require('./User')(sequelize, Sequelize.DataTypes);
+const Menu = require('./Menu')(sequelize, Sequelize.DataTypes);
+const Order = require('./Order')(sequelize, Sequelize.DataTypes);
+const Review = require('./Review')(sequelize, Sequelize.DataTypes);
 
-User.hasMany(Order);
-Order.belongsTo(User);
-
-User.hasMany(Review);
-Review.belongsTo(User);
-
-Menu.hasMany(Review);
-Review.belongsTo(Menu);
-
-Menu.hasMany(Order);
-Order.belongsTo(Menu);
+// Définissez les relations
+User.hasMany(Menu, { foreignKey: 'userId' });
+User.hasMany(Order, { foreignKey: 'userId' });
+User.hasMany(Review, { foreignKey: 'userId' });
+Menu.hasMany(Review, { foreignKey: 'menuId' });
+Menu.hasMany(Order, { foreignKey: 'menuId' });
 
 module.exports = {
   sequelize,
