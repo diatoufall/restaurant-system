@@ -22,3 +22,6 @@ sequelize.sync({ alter: true })
   .catch(err => {
     console.error('Database sync error:', err);
   });
+app.use('/api/menus', require('./routes/menus'));
+app.use('/api/orders', auth, require('./routes/orders'));
+app.use('/api/reviews', auth, require('./routes/reviews'));
